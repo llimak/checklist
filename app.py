@@ -34,10 +34,11 @@ def lists():
         if(db.session.query(List).filter(List.name == data['name']).count() > 0):
             return '409 Checklist of given name already exists.'
         else:
-            new_list = List(name=data['name'])
-            db.session.add(new_list)
-            db.session.commit()
-            return '201 New checklist inserted.'
+            if 'name' in data:
+                new_list = List(name=data['name'])
+                db.session.add(new_list)
+                db.session.commit()
+                return '201 New checklist inserted.'
 
     if request.method == 'GET':
         lists = List.query.all()
@@ -64,10 +65,11 @@ def lists_items(name):
 
     if request.method == 'POST':
         data = request.json
-        new_item = Item(name=data['name'], list_id=list_id, checked=False)
-        db.session.add(new_item)
-        db.session.commit()
-        return jsonify(new_item.id)
+        if 'name' in data:
+            new_item = Item(name=data['name'], list_id=list_id, checked=False)
+            db.session.add(new_item)
+            db.session.commit()
+            return jsonify(new_item.id)
 
     if request.method == 'GET':
         items_list = Item.query.filter(Item.list_id == list_id).all()
