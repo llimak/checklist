@@ -16,7 +16,7 @@ class List(db.Model):
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), unique=True)
+    name = db.Column(db.String(100), unique=False)
     checked = db.Column(db.Boolean)
     list_id = db.Column(db.Integer, db.ForeignKey('list.id'))
 
@@ -82,7 +82,7 @@ def lists_items(name):
         return jsonify(items)
 
 
-@app.route('/lists/<name>/items/<id>', methods=['PATCH', 'POST'])
+@app.route('/lists/<name>/items/<id>', methods=['PATCH', 'DELETE'])
 def lists_items_chec_delete(name, id):
     list_id = List.query.filter(List.name == name).first()
     list_id = list_id.id
@@ -96,6 +96,12 @@ def lists_items_chec_delete(name, id):
         else:
             return '404 Item of given ID does not exist.'
 
+    if request.method == 'DELETE':
+        if(Item.query.filter((Item.list_id == list_id), (Item.id == id)).delete()):
+            db.session.commit()
+            return '200 OK.'
+        else:
+            return '404 Item of given ID does not exist in checklist.'
 
 
 
