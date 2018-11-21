@@ -14,7 +14,7 @@ Python 3.6, Flask, SQLAlchemy, SQLite
 Command line:
 
 ```
-sqlite3 database_name.db
+sqlite3 database_name.db 
 sqlite> .tables
 sqlite> .exit
 python3
@@ -22,6 +22,8 @@ python3
 >>> db.create_all()
 >>> exit()
 ```
+
+In this case database_name.db is checklist.db
 
 ### Start flask app
 
